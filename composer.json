@@ -1,5 +1,5 @@
 {
-    "name": "bermudaphp/provider",
+    "name": "bermudaphp/config",
     "license": "MIT",
     "autoload": {
         "psr-4": {
