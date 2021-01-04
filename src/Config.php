@@ -29,7 +29,7 @@ final class Config
     {
         $providers[] = static function()
         {
-            return [ConfigAggregator::ENABLE_CACHE => self::$useCache]);
+            return [ConfigAggregator::ENABLE_CACHE => self::$useCache];
         };
         
         return (new ConfigAggregator($providers, self::$cacheFile))->getMergedConfig();
