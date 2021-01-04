@@ -3,7 +3,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Bermuda\\Provider\\": "src/"
+            "Bermuda\\Config\\": "src/"
         }
     }
 }
