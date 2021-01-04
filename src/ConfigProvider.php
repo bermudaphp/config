@@ -1,11 +1,11 @@
 <?php
 
-namespace Bermuda\Provider;
+namespace Bermuda\Config;
 
 
 /**
  * Class ConfigProvider
- * @package Bermuda\Provider
+ * @package Bermuda\Config
  */
 class ConfigProvider
 {
@@ -19,7 +19,7 @@ class ConfigProvider
     
     public function __invoke(): array
     {
-        return [self::dependencies => $this->getDependencies()];
+        return [self::dependencies => array_filter($this->getDependencies(), static function($v){return $v != null;}];
     }
     
     protected function getDependencies(): array
