@@ -18,7 +18,7 @@ final class Config
         throw new \RuntimeException(__CLASS__ . ' is not instantiable!');
     }
 
-    public static bool $useCache = false;
+    public static bool $devMode = true;
     public static ?string $cacheFile = null;
 
     /**
@@ -29,7 +29,7 @@ final class Config
     {
         $providers[] = static function()
         {
-            return [ConfigAggregator::ENABLE_CACHE => self::$useCache];
+            return [ConfigAggregator::ENABLE_CACHE => !self::devMode];
         };
         
         return (new ConfigAggregator($providers, self::$cacheFile))->getMergedConfig();
