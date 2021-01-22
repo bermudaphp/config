@@ -2,7 +2,6 @@
 
 namespace Bermuda\Config;
 
-
 /**
  * Class ConfigProvider
  * @package Bermuda\Config
