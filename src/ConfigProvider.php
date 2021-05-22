@@ -18,7 +18,7 @@ class ConfigProvider
     
     public function __invoke(): array
     {
-        return [self::dependencies => array_filter($this->getDependencies(), static function($v){return $v != null;})];
+        return [self::dependencies => array_filter($this->getDependencies(), static fn($v) => $v != null;)];
     }
     
     protected function getDependencies(): array
