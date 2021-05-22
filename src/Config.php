@@ -25,11 +25,6 @@ final class Config
      */
     public static function merge(callable ... $providers): array
     {
-        $providers[] = static function()
-        {
-            return ['debug' => self::$devMode, ConfigAggregator::ENABLE_CACHE => !self::$devMode && self::$cacheFile != null,];
-        };
-        
-        return (new ConfigAggregator($providers, self::$cacheFile))->getMergedConfig();
+        return (new ConfigAggregator(static fn() => ['debug' => self::$devMode, ConfigAggregator::ENABLE_CACHE => !self::$devMode && self::$cacheFile != null], self::$cacheFile))->getMergedConfig();
     }
 }
