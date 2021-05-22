@@ -2,10 +2,8 @@
 
 namespace Bermuda\Config;
 
-
 use Laminas\ConfigAggregator\ArrayProvider;
 use Laminas\ConfigAggregator\ConfigAggregator;
-
 
 /**
  * Class Config
