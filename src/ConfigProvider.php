@@ -2,10 +2,6 @@
 
 namespace Bermuda\Config;
 
-/**
- * Class ConfigProvider
- * @package Bermuda\Config
- */
 class ConfigProvider
 {
     public const dependencies = 'dependencies';
