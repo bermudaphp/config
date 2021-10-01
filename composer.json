@@ -4,6 +4,11 @@
     "autoload": {
         "psr-4": {
             "Bermuda\\Config\\": "src/"
-        }
-    }
+        },
+        "files": ["src/functions.php"]
+  },
+  "require": {
+    "php": "^7.4 || ~8.0.0",
+    "psr/container": "^1.1.1"
+  }
 }
