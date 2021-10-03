@@ -11,7 +11,7 @@ use Psr\Container\ContainerInterface;
  * @param bool $invokable
  * @return mixed
  */
-function cget(ContainerInterface $container, string $id, $default = null, bool $invokable = false): mixed
+function cget(ContainerInterface $container, string $id, $default = null, bool $invokable = true): mixed
 {
     if ($container->has($id)) {
         return $container->get($id);
