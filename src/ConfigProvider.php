@@ -14,7 +14,11 @@ class ConfigProvider
     
     public function __invoke(): array
     {
-        return [self::dependencies => array_filter($this->getDependencies(), static fn($v) => $v != null)];
+        $array = [self::dependencies => array_filter(
+            $this->getDependencies(), static fn($v) => $v != null)
+        ];
+        
+        return ($cfg = $this->getConfig()) !== [] ? array_merge($array, $cfg) : $array;
     }
     
     protected function getDependencies(): array
@@ -27,6 +31,11 @@ class ConfigProvider
             self::delegators => $this->getDelegators(),
             self::services => $this->getServices(),
         ];
+    }
+
+    protected function getConfig(): array
+    {
+        return [];
     }
     
     /**
