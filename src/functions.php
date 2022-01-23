@@ -13,9 +13,9 @@ use Psr\Container\ContainerInterface;
  */
 function cget(ContainerInterface $container, string $id, $default = null, bool $invokable = true): mixed
 {
-    if ($container->has($id)) {
+    try {
         return $container->get($id);
+    } catch (NotFoundExceptionInterface) {
+        return $invokable && is_callable($default) ? $default($container) : $default ;
     }
-    
-    return $invokable && is_callable($default) ? $default($container) : $default ; 
 }
