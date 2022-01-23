@@ -9,6 +9,7 @@ use Psr\Container\ContainerInterface;
  * @param string $id
  * @param mixed $default
  * @param bool $invokable
+ * @throws ContainerExceptionInterface Error while retrieving the entry.
  * @return mixed
  */
 function cget(ContainerInterface $container, string $id, $default = null, bool $invokable = true): mixed
