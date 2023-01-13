@@ -9,6 +9,7 @@ final class Config
     public static bool $devMode = true;
     public static ?string $cacheFile = null;
     
+    public const app_config = 'config';
     public const app_timezone = 'app.timezone';
     public const app_debug_mode_enable = 'app.debug';
     
