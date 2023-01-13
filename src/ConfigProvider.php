@@ -15,8 +15,8 @@ class ConfigProvider
     public function __invoke(): array
     {
         $array = [self::dependencies => array_filter(
-            $this->getDependencies(), static fn($v) => $v != null)
-        ];
+            $this->getDependencies(), static fn($v) => !empty($v)
+        )];
         
         return ($cfg = $this->getConfig()) !== [] ? array_merge($array, $cfg) : $array;
     }
