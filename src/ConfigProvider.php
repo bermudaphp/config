@@ -4,7 +4,7 @@ namespace Bermuda\Config;
 
 class ConfigProvider
 {
-    public const configKey = 'config';
+    public const containerConfigKey = 'config';
     public const dependencies = 'dependencies';
     public const factories = 'factories';
     public const invokables = 'invokables';
