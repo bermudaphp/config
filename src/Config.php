@@ -30,7 +30,7 @@ final class Config
 
         $cfg = [];
         foreach ($providers as $provider) {
-            $cfg = array_merge_recursive($cfg, to_array($provider()));
+            $cfg = array_merge_recursive($cfg, self::wrapCallable(to_array($provider())));
         }
 
         return $cfg;
@@ -41,7 +41,7 @@ final class Config
         if (file_exists($filename)) {
             return include $filename;
         }
-        
+
         throw new \RuntimeException('No such file '. $filename);
     }
 
@@ -55,5 +55,18 @@ final class Config
     public static function writeCachedConfig(string $file, array $config): void
     {
         FileWriter::writeFile($file, '<?php'.PHP_EOL.'  return'.VarExporter::export($config));
+    }
+    
+    private static function wrapCallable(array $data): array
+    {
+        $cfg = [];
+        foreach ($data as $key => $value) {
+            if ($key == ConfigProvider::dependencies) $cfg[$key] = $value;
+            else if (is_array($value)) $cfg[$key] = self::wrapCallable($value);
+            else if (is_callable($value)) $cfg[$key] = static fn() => $value;
+            else $cfg[$key] = $value ;
+        }
+
+        return $cfg;
     }
 }
