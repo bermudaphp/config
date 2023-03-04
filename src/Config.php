@@ -36,7 +36,7 @@ final class Config
         return $cfg;
     }
     
-    public function fromCache(string $filename): array
+    public static function fromCache(string $filename): array
     {
         if (file_exists($filename)) {
             return include $filename;
