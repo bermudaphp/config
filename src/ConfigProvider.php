@@ -12,6 +12,7 @@ class ConfigProvider
     public const aliases = 'aliases';
     public const delegators = 'delegators';
     public const services = 'services';
+    public const bootstrap = 'bootstrap';
     
     public function __invoke(): array
     {
