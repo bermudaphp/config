@@ -2,14 +2,17 @@
 
 namespace Bermuda\Config;
 
+use Bermuda\VarExport\VarExporter;
 use Laminas\ConfigAggregator\ConfigAggregator;
+use Webimpress\SafeWriter\FileWriter;
+use function Bermuda\Stdlib\to_array;
 
 final class Config
 {
     public static bool $devMode = true;
     public static ?string $cacheFile = null;
     
-    public const app_config = 'config';
+    public const app_config = \Elie\PHPDI\Config\Config::CONFIG;
     public const app_timezone = 'app.timezone';
     public const app_debug_mode_enable = 'app.debug';
     
@@ -19,15 +22,38 @@ final class Config
      */
     public static function merge(callable ...$providers): array
     {
-        return (new ConfigAggregator(
-            array_merge($providers, 
-                [
-                    static fn(): array => [
-                        self::app_debug_mode_enable => self::$devMode,
-                        ConfigAggregator::ENABLE_CACHE => !self::$devMode && self::$cacheFile != null
-                    ]
-                ]
-            ), Config::$cacheFile
-        ))->getMergedConfig();
+        $providers = array_merge($providers, [
+            static fn(): array => [
+                self::app_debug_mode_enable => self::$devMode
+            ]
+        ]);
+
+        $cfg = [];
+        foreach ($providers as $provider) {
+            $cfg = array_merge_recursive($cfg, to_array($provider()));
+        }
+
+        return $cfg;
+    }
+    
+    public function fromCache(string $filename): array
+    {
+        if (file_exists($filename)) {
+            return include $filename;
+        }
+        
+        throw new \RuntimeException('No such file '. $filename);
+    }
+
+    /**
+     * @param string $file
+     * @param array $config
+     * @return void
+     * @throws \Bermuda\VarExport\ExportException
+     * @throws \Webimpress\SafeWriter\Exception\ExceptionInterface
+     */
+    public static function writeCachedConfig(string $file, array $config): void
+    {
+        FileWriter::writeFile($file, '<?php'.PHP_EOL.'  return'.VarExporter::export($config));
     }
 }
