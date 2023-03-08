@@ -4,6 +4,7 @@ namespace Bermuda\Config;
 
 use Bermuda\Stdlib\Arrayable;
 use Bermuda\VarExport\VarExporter;
+use Psr\Container\ContainerInterface;
 use Laminas\ConfigAggregator\ConfigAggregator;
 use Webimpress\SafeWriter\FileWriter;
 use function Bermuda\Stdlib\to_array;
