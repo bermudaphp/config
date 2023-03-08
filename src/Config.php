@@ -8,7 +8,7 @@ use Laminas\ConfigAggregator\ConfigAggregator;
 use Webimpress\SafeWriter\FileWriter;
 use function Bermuda\Stdlib\to_array;
 
-final class Config implements \Countable, \IteratorAggregate, \ArrayAccese, Arrayable
+final class Config implements \Countable, \IteratorAggregate, \ArrayAccess, Arrayable
 {
     public static bool $devMode = true;
     public static ?string $cacheFile = null;
