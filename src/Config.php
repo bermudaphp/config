@@ -153,15 +153,30 @@ final class Config implements \Countable, \IteratorAggregate, \ArrayAccess, Arra
      */
     public static function merge(callable ...$providers): array
     {
-        $providers = array_merge($providers, [
-            static fn(): array => [
-                self::app_debug_mode_enable => self::$devMode
-            ]
-        ]);
-
-        $cfg = [];
+        $cfg = [self::app_debug_mode_enable => self::$devMode];
         foreach ($providers as $provider) {
-            $cfg = array_merge_recursive($cfg, self::wrapCallable(to_array($provider())));
+            foreach (to_array($provider()) as $key => $value) {
+                if ($key === ConfigProvider::dependencies) {
+                    foreach ($value as $dependencyKey => $dependencyValue) {
+                        foreach ($dependencyValue as $k => $v) {
+                            $cfg[ConfigProvider::dependencies][$dependencyKey][$k] = $v;
+                        }
+                    }
+                } else if ($key == ConfigProvider::bootstrap) {
+                    if (!array_key_exists($key, $cfg)) {
+                        $cfg[$key] = [];
+                    }
+
+                    if (is_array($value)) $cfg[$key] = array_merge($cfg[$key], self::wrapCallable($value));
+                    else $cfg[$key][] = self::wrapCallable($value);
+                } else {
+                    if (array_key_exists($key, $cfg) && is_array($cfg[$key])) {
+                        if (is_array($value)) $cfg[$key] = array_merge($cfg[$key], self::wrapCallable($value));
+                        else $cfg[$key] = self::wrapCallable($value);
+                    } else $cfg[$key] = self::wrapCallable($value);
+                }
+            }
+
         }
 
         return $cfg;
