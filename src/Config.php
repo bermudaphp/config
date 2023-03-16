@@ -203,16 +203,17 @@ final class Config implements \Countable, \IteratorAggregate, \ArrayAccess, Arra
         FileWriter::writeFile($file, '<?php'.PHP_EOL.'  return'.VarExporter::export($config));
     }
     
-    private static function wrapCallable(array $data): array
+    private static function wrapCallable(mixed $var): mixed
     {
-        $cfg = [];
-        foreach ($data as $key => $value) {
-            if ($key == ConfigProvider::dependencies) $cfg[$key] = $value;
-            else if (is_array($value)) $cfg[$key] = self::wrapCallable($value);
-            else if (is_callable($value)) $cfg[$key] = static fn() => $value;
-            else $cfg[$key] = $value ;
+        if (is_array($var)) {
+            foreach ($var as $key => &$value) {
+                if (is_array($value)) $value = self::wrapCallable($value);
+                else if (is_callable($value)) $value = static fn() => $value;
+            }
+            
+            return $var;
         }
 
-        return $cfg;
+        return is_callable($var) ? static fn() => $var : $var ;
     }
 }
