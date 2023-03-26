@@ -28,7 +28,7 @@ function cget(ContainerInterface $container, string $id, $default = null, bool $
  */
 function conf(ContainerInterface $container): Config
 {
-    return $container->get(Config::app_config);
+    return new Config($container->get(Config::app_config));
 }
 
 /**
