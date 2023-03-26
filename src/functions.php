@@ -37,7 +37,7 @@ function conf(ContainerInterface $container): Config
  */
 function callback(callable $callback): callable
 {
-    return static fn() => $callback ;
+    return fn() => $callback ;
 }
 
 
