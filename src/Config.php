@@ -7,7 +7,6 @@ use Bermuda\VarExport\VarExporter;
 use Laminas\ConfigAggregator\ConfigAggregator;
 use Psr\Container\ContainerInterface;
 use Webimpress\SafeWriter\FileWriter;
-use function Bermuda\Stdlib\to_array;
 
 final class Config implements \Countable, \IteratorAggregate, \ArrayAccess, Arrayable
 {
@@ -155,7 +154,7 @@ final class Config implements \Countable, \IteratorAggregate, \ArrayAccess, Arra
     {
         $cfg = [self::app_debug_mode_enable => self::$devMode];
         foreach ($providers as $provider) {
-            foreach (to_array($provider()) as $key => $value) {
+            foreach ($provider() as $key => $value) {
                 if ($key === ConfigProvider::dependencies) {
                     foreach ($value as $dependencyKey => $dependencyValue) {
                         foreach ($dependencyValue as $k => $v) {
@@ -167,13 +166,13 @@ final class Config implements \Countable, \IteratorAggregate, \ArrayAccess, Arra
                         $cfg[$key] = [];
                     }
 
-                    if (is_array($value)) $cfg[$key] = array_merge($cfg[$key], self::wrapCallable($value));
-                    else $cfg[$key][] = self::wrapCallable($value);
+                    if (is_array($value)) $cfg[$key] = array_merge($cfg[$key], $value);
+                    else $cfg[$key][] = $value;
                 } else {
                     if (array_key_exists($key, $cfg) && is_array($cfg[$key])) {
-                        if (is_array($value)) $cfg[$key] = array_merge($cfg[$key], self::wrapCallable($value));
-                        else $cfg[$key] = self::wrapCallable($value);
-                    } else $cfg[$key] = self::wrapCallable($value);
+                        if (is_array($value)) $cfg[$key] = array_merge($cfg[$key], $value);
+                        else $cfg[$key] = $value;
+                    } else $cfg[$key] = $value;
                 }
             }
 
@@ -201,19 +200,5 @@ final class Config implements \Countable, \IteratorAggregate, \ArrayAccess, Arra
     public static function writeCachedConfig(string $file, array $config): void
     {
         FileWriter::writeFile($file, '<?php'.PHP_EOL.'  return'.VarExporter::export($config));
-    }
-    
-    private static function wrapCallable(mixed $var): mixed
-    {
-        if (is_array($var)) {
-            foreach ($var as $key => &$value) {
-                if (is_array($value)) $value = self::wrapCallable($value);
-                else if (is_callable($value)) $value = static fn() => $value;
-            }
-            
-            return $var;
-        }
-
-        return is_callable($var) ? static fn() => $var : $var ;
     }
 }
