@@ -31,4 +31,13 @@ function conf(ContainerInterface $container): Config
     return $container->get(Config::app_config);
 }
 
+/**
+ * @param callable $callback
+ * @return callable
+ */
+function callback(callable $callback): callable
+{
+    return static fn() => $callback ;
+}
+
 
