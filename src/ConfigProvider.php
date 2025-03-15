@@ -13,19 +13,53 @@ class ConfigProvider
     public const delegators = 'delegators';
     public const services = 'services';
     public const bootstrap = 'bootstrap';
-    
+
+    /**
+     * @var ConfigProvider[]
+     */
+    protected array $providers = [];
+
+    final public function __construct()
+    {
+        foreach ($this->getProviders() as $provider) {
+            $this->providers[] = new $provider;
+        }
+    }
+
+    /**
+     * @template T of ConfigProvider
+     * @return class-string<T>[]
+     */
+    protected function getProviders(): array
+    {
+        return [];
+    }
+
     public function __invoke(): array
     {
         $array = [self::dependencies => array_filter(
             $this->getDependencies(), static fn($v) => !empty($v)
         )];
         
-        return ($cfg = $this->getConfig()) !== [] ? array_merge($array, $cfg) : $array;
+        return ($cfg = $this->getMergedConfig()) !== [] ? array_merge($array, $cfg) : $array;
     }
-    
+
+    private function getMergedConfig(): array
+    {
+        if ($this->providers === []) return $this->getConfig();
+
+        $config = $this->getConfig();
+        foreach ($this->providers as $provider) {
+            $config = array_merge_recursive($config, $provider->getMergedConfig());
+        }
+
+        return $config;
+    }
+
+
     protected function getDependencies(): array
     {
-        return [
+        $dependencies = [
             self::factories => $this->getFactories(),
             self::invokables => $this->getInvokables(),
             self::autowires => $this->getAutowires(),
@@ -33,6 +67,14 @@ class ConfigProvider
             self::delegators => $this->getDelegators(),
             self::services => $this->getServices(),
         ];
+
+        if ($this->providers !== []) {
+            foreach ($this->providers as $provider) {
+                $dependencies = array_merge_recursive($dependencies, $provider->getDependencies());
+            }
+        }
+
+        return $dependencies;
     }
 
     protected function getConfig(): array
