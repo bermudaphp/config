@@ -3,6 +3,7 @@
 namespace Bermuda\Config;
 
 use Bermuda\ClassScanner\ClassFinder;
+use Bermuda\ClassScanner\Filter\AttributeFilter;
 
 class AttributeProvider
 {
@@ -17,15 +18,13 @@ class AttributeProvider
     public function __invoke(): array
     {
         $data = [];
-        foreach (new ClassFinder()->find($this->directory) as $reflectionClass) {
-            if ($reflectionClass->getAttributes(AsConfig::class)[0] ?? null) {
-                if (!$reflectionClass->hasMethod('__invoke')) {
-                    throw new \RuntimeException('Invalid provider: ' . $reflectionClass->getName());
-                }
-
-                $provider = $reflectionClass->newInstanceWithoutConstructor();
-                $data = array_merge_recursive($data, $provider->__invoke());
+        foreach (new ClassFinder(filters: [new AttributeFilter(AsConfig::class)])->find($this->directory) as $cls) {
+            if (!$cls->hasMethod('__invoke')) {
+                throw new \RuntimeException('Invalid provider: ' . $cls->getName());
             }
+
+            $provider = $cls->newInstanceWithoutConstructor();
+            $data = array_merge_recursive($data, $provider->__invoke());
         }
 
         return $data;
