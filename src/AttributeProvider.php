@@ -20,7 +20,7 @@ class AttributeProvider
     {
         $data = [];
         foreach (new ClassFinder(filters: [new AttributeFilter(AsConfig::class)])->find($this->dirs, $this->exclude) as $cls) {
-            if (!$cls->hasMethod('__invoke')) {
+            if (!$cls->isInvokable()) {
                 throw new \RuntimeException('Invalid provider: ' . $cls->getName());
             }
 
