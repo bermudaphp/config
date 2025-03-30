@@ -8,7 +8,8 @@ use Bermuda\ClassScanner\Filter\AttributeFilter;
 class AttributeProvider
 {
     public function __construct(
-        private readonly string $directory,
+        private readonly string|array $dirs,
+        private readonly string|array $exclude = []
     ) {
     }
 
@@ -18,7 +19,7 @@ class AttributeProvider
     public function __invoke(): array
     {
         $data = [];
-        foreach (new ClassFinder(filters: [new AttributeFilter(AsConfig::class)])->find($this->directory) as $cls) {
+        foreach (new ClassFinder(filters: [new AttributeFilter(AsConfig::class)])->find($this->dirs, $this->exclude) as $cls) {
             if (!$cls->hasMethod('__invoke')) {
                 throw new \RuntimeException('Invalid provider: ' . $cls->getName());
             }
