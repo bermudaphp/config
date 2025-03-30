@@ -8,7 +8,7 @@
         "files": ["src/functions.php"]
   },
   "require": {
-    "php": "^8.0 || ^8.1",
+    "php": "^8.1",
     "bermudaphp/arrayable": "^1.0",
     "bermudaphp/var-export": "^1.1",
     "bermudaphp/class-scanner": "^1.1",
