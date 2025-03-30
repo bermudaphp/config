@@ -13,7 +13,7 @@ final class PhpFileProvider
     public function __construct(
         private readonly string $pattern,
         private readonly bool $filenameAsKey = true,
-        callable $normalizer = null
+        ?callable $normalizer = null
     ) {
         $this->normalizer = $normalizer;
     }
