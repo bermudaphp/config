@@ -11,7 +11,7 @@
     "php": "^8.0 || ^8.1",
     "bermudaphp/arrayable": "^1.0",
     "bermudaphp/var-export": "^1.1",
-    "bermuda/class-scanner": "^1.1",
+    "bermudaphp/class-scanner": "^1.1",
     "laminas/laminas-config-aggregator": "^1.13",
     "psr/container": "^1.1.1"
   }
