@@ -4,7 +4,7 @@ namespace Bermuda\Config;
 
 use Bermuda\ClassScanner\ClassFinder;
 
-class AttributeConfigProvider
+class AttributeProvider
 {
     public function __construct(
         private readonly string $directory,
