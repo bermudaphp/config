@@ -2,8 +2,8 @@
 
 namespace Bermuda\Config;
 
-use Bermuda\ClassScanner\ClassFinder;
-use Bermuda\ClassScanner\Filter\AttributeFilter;
+use Bermuda\ClassFinder\ClassFinder;
+use Bermuda\ClassFinder\Filter\AttributeFilter;
 
 class AttributeProvider
 {
