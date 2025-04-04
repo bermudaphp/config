@@ -42,9 +42,9 @@ final class Config implements \Countable, \IteratorAggregate, \ArrayAccess, Arra
 
     /**
      * @param $name
-     * @return mixed|self
+     * @return Config|mixed
      */
-    public function __get($name)
+    public function __get(int|string|float $name): mixed
     {
         return $this->offsetGet($name);
     }
@@ -52,15 +52,15 @@ final class Config implements \Countable, \IteratorAggregate, \ArrayAccess, Arra
     /**
      * @throws RuntimeException
      */
-    public function __set($name, $value)
+    public function __set(int|string|float $name, mixed $value)
     {
         $this->offsetSet($name, $value);
     }
 
     /**
-     * @inerhitDoc
+     * @return Config|mixed
      */
-    public function offsetGet($offset): mixed
+    public function offsetGet(mixed $offset): mixed
     {
         return $this->get($offset);
     }
@@ -68,7 +68,7 @@ final class Config implements \Countable, \IteratorAggregate, \ArrayAccess, Arra
     /**
      * @return self|null|mixed
      */
-    public function get($offset, mixed $default = null, bool $invoke = true, bool $toArray = false)
+    public function get(int|string|float $offset, mixed $default = null, bool $invoke = true, bool $toArray = true): mixed
     {
         $data = $this->offsetExists($offset) ? $this->data[$offset]
             : ($invoke && is_callable($default) ? $default() : $default);
@@ -81,7 +81,7 @@ final class Config implements \Countable, \IteratorAggregate, \ArrayAccess, Arra
     /**
      * @throws RuntimeException
      */
-    public function offsetSet($offset, $value): void
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         throw $this->notImmutable();
     }
@@ -101,19 +101,15 @@ final class Config implements \Countable, \IteratorAggregate, \ArrayAccess, Arra
         return $array;
     }
 
-    /**
-     * @param $name
-     * @return bool
-     */
-    public function __isset($name): bool
+    public function __isset(string|int|float $offset): bool
     {
-        return $this->offsetExists($name);
+        return $this->offsetExists($offset);
     }
 
     /**
      * @inerhitDoc
      */
-    public function offsetExists($offset): bool
+    public function offsetExists(mixed $offset): bool
     {
         return array_key_exists($offset, $this->data);
     }
@@ -121,7 +117,7 @@ final class Config implements \Countable, \IteratorAggregate, \ArrayAccess, Arra
     /**
      * @throws RuntimeException
      */
-    public function __unset($name): void
+    public function __unset(string|int|float $name): void
     {
         $this->offsetUnset($name);
     }
@@ -129,7 +125,7 @@ final class Config implements \Countable, \IteratorAggregate, \ArrayAccess, Arra
     /**
      * @throws RuntimeException
      */
-    public function offsetUnset($offset): void
+    public function offsetUnset(mixed $offset): void
     {
         throw $this->notImmutable();
     }
@@ -184,10 +180,7 @@ final class Config implements \Countable, \IteratorAggregate, \ArrayAccess, Arra
     
     public static function fromCache(string $filename): array
     {
-        if (file_exists($filename)) {
-            return include $filename;
-        }
-
+        if (file_exists($filename)) return include $filename;
         throw new \RuntimeException('No such file '. $filename);
     }
 
