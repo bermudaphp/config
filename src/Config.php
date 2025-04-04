@@ -66,15 +66,16 @@ final class Config implements \Countable, \IteratorAggregate, \ArrayAccess, Arra
     }
 
     /**
-     * @param $offset
-     * @param null $default
-     * @param bool $invoke
      * @return self|null|mixed
      */
-    public function get($offset, $default = null, bool $invoke = true)
+    public function get($offset, mixed $default = null, bool $invoke = true, bool $toArray = false)
     {
-        return $this->offsetExists($offset) ? $this->data[$offset]
+        $data = $this->offsetExists($offset) ? $this->data[$offset]
             : ($invoke && is_callable($default) ? $default() : $default);
+
+        if ($toArray && $data instanceof Arrayable) return $data->toArray();
+
+        return $data;
     }
 
     /**
