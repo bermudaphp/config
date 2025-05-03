@@ -25,7 +25,7 @@ class AttributeProvider
             }
 
             $provider = $cls->newInstanceWithoutConstructor();
-            $data = array_merge_recursive($data, $provider->__invoke());
+            $data = array_replace_recursive($data, $provider->__invoke());
         }
 
         return $data;
