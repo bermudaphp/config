@@ -37,11 +37,9 @@ class ConfigProvider
 
     public function __invoke(): array
     {
-        $array = [self::dependencies => array_filter(
-            $this->getDependencies(), static fn($v) => !empty($v)
-        )];
+        $array = [self::dependencies => $this->getDependencies()];
         
-        return ($cfg = $this->getMergedConfig()) !== [] ? array_merge($array, $cfg) : $array;
+        return ($cfg = $this->getMergedConfig()) !== [] ? array_replace($array, $cfg) : $array;
     }
 
     private function getMergedConfig(): array
@@ -50,7 +48,7 @@ class ConfigProvider
 
         $config = $this->getConfig();
         foreach ($this->providers as $provider) {
-            $config = array_merge_recursive($config, $provider->getMergedConfig());
+            $config = array_replace_recursive($config, $provider->getMergedConfig());
         }
 
         return $config;
@@ -70,7 +68,7 @@ class ConfigProvider
 
         if ($this->providers !== []) {
             foreach ($this->providers as $provider) {
-                $dependencies = array_merge_recursive($dependencies, $provider->getDependencies());
+                $dependencies = array_replace_recursive($dependencies, $provider->getDependencies());
             }
         }
 
