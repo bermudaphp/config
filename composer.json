@@ -10,6 +10,7 @@
   "require": {
     "php": "^8.4",
     "bermudaphp/arrayable": "^1.0",
+    "bermudaphp/config-provider": "^1.0",
     "bermudaphp/var-export": "^1.1",
     "bermudaphp/finder": "^1.0",
     "laminas/laminas-config-aggregator": "^1.13",
