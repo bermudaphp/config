@@ -613,10 +613,7 @@ $config = $loader->load(
 
 ```php
 // Загрузка с включенным кэшированием
-$loader = new ConfigLoader(
-    envPaths: '/app',
-    cacheFile: '/tmp/config.cache.php'
-);
+$loader = new ConfigLoader(envPaths: '/app');
 
 $config = $loader->load(
     new FileProvider('config/*.php'),
@@ -630,7 +627,7 @@ $loader->export('/tmp/config.cache.php', $config);
 ### Использование кэшированной конфигурации
 
 ```php
-// Загрузка из кэша (провайдеры игнорируются при наличии кэша)
+// Загрузка из кэша (провайдеры переданные в `load` игнорируются при наличии кэша, переменные окружения так же загружаются из кеша, пути переданные в конструктор игнорируются)
 $loader = new ConfigLoader(cacheFile: '/tmp/config.cache.php');
 $config = $loader->load();
 ```
