@@ -234,9 +234,10 @@ final class ConfigLoader
      * the data array. Creates cache directory if it doesn't exist.
      *
      * @param string $filename Path to the file where configuration should be exported
+     * @param array|Config $data Configuration data to export
      * @throws \RuntimeException On file write error or directory creation failure
      */
-    public function export(string $filename): void
+    public function export(string $filename, array|Config $data): void
     {
         try {
             $directory = dirname($filename);
@@ -244,8 +245,18 @@ final class ConfigLoader
                 mkdir($directory, 0755, true);
             }
 
-            $data = VarExporter::exportPretty($data);
-            $content = "<?php\n\nreturn " . $data . ";\n";
+            // Convert Config object to array if needed
+            if ($data instanceof Config) {
+                $exportData = [
+                    'config' => $data->toArray(),
+                    'environment' => $data->environment?->toArray()
+                ];
+            } else {
+                $exportData = $data;
+            }
+
+            $exportedData = VarExporter::exportPretty($exportData);
+            $content = "<?php\n\nreturn " . $exportedData . ";\n";
 
             FileWriter::writeFile($filename, $content);
 
@@ -257,5 +268,23 @@ final class ConfigLoader
                 $e
             );
         }
+    }
+
+    /**
+     * Export configuration object to cache file
+     *
+     * Convenience method for exporting a Config object to the cache file.
+     * If no cache file is configured, throws an exception.
+     *
+     * @param Config $config Configuration object to export
+     * @throws \RuntimeException If no cache file is configured or export fails
+     */
+    public function exportConfig(Config $config): void
+    {
+        if ($this->cacheFile === null) {
+            throw new \RuntimeException('No cache file configured for export');
+        }
+
+        $this->export($this->cacheFile, $config);
     }
 }
