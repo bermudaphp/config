@@ -3,7 +3,9 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Bermuda\\Config\\": "src/"
+            "Bermuda\\Config\\": "src/",
+            "Bermuda\\Config\\Env\\": "src/env/",
+            "Bermuda\\Config\\Reader\\": "src/reader/"
         },
         "files": ["src/functions.php"]
   },
