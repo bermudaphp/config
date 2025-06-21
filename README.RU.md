@@ -776,9 +776,9 @@ $provider = new FileProvider('config/*', [$csvReader, $xmlReader]);
 ## Системные требования
 
 - PHP 8.4 или выше
-- ext-json (для поддержки JSON)
-- ext-simplexml (для поддержки XML)
-- symfony/yaml (опционально, для поддержки YAML)
+- ext-json
+- ext-simplexml
+- symfony/yaml
 
 ## Лицензия
 
