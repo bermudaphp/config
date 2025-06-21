@@ -297,46 +297,6 @@ try {
 }
 ```
 
-### Практические примеры валидации
-
-```php
-// Валидация конфигурации для ранней проверки при запуске
-function validateRequiredConfig(Config $config): void 
-{
-    // Базовая валидация
-    $config->ensureValue('app.key');
-    $config->ensureString('app.name');
-    $config->ensureValue('database.url');
-    
-    // Типизированная валидация
-    $config->ensureInt('database.port'); // Должно быть валидным integer
-    $config->ensureBool('app.debug'); // Должно быть валидным boolean
-    $config->ensureArray('app.providers'); // Должно быть валидным array
-    
-    // Вложенная валидация с точечной нотацией
-    $config->ensureString('mail.from.address', Config::CALL_VALUES, true);
-    $config->ensureInt('cache.ttl', Config::CALL_VALUES, true);
-    $config->ensureBool('features.api_enabled', Config::CALL_VALUES, true);
-}
-
-// Валидация продакшен конфигурации
-function validateProductionConfig(Config $config): void
-{
-    if ($config->ensureString('app.env') === 'production') {
-        // В продакшене должны быть корректные типы
-        $config->ensureString('app.key'); // Обязательная строка
-        $config->ensureBool('app.debug'); // Должно быть false в продакшене
-        $config->ensureInt('database.pool_size'); // Должно быть валидным числом
-        $config->ensureArray('cors.allowed_origins'); // Должно быть массивом
-        
-        // Убедиться что отладка отключена
-        if ($config->ensureBool('app.debug')) {
-            throw new \RuntimeException('Режим отладки должен быть отключен в продакшене');
-        }
-    }
-}
-```
-
 ### Доступ к окружению: `env()` против `$config->environment`
 
 Библиотека предоставляет два способа доступа к переменным окружения с различными характеристиками:
